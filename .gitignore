@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite database file
+*.sqlite3
+*.db
+
+# Environment variables / secrets
+.env
+
+# Virtual environment
+venv/
+ENV/
+env/
+.venv/
+
+# PyCharm project files
+.idea/
+
+# MacOS / Windows / Linux system files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Test/report output
+htmlcov/
+.coverage
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# Pydantic cache
+__pydantic_cache__/
+
+# Optional: pytest cache
+.pytest_cache/
+
+# Optional: Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Optional: local config overrides
+config.local.*
