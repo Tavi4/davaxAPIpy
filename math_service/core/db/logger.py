@@ -23,3 +23,21 @@ def log_operation(operation: str, input_data: dict, result):
 
     conn.commit()
     conn.close()
+
+
+#  function to fetch logs
+def get_operation_logs(limit: int = 10):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT operation, input_data, result, timestamp
+        FROM operation_log
+        ORDER BY timestamp DESC
+        LIMIT ?
+    """, (limit,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
