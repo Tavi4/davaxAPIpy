@@ -1,3 +1,4 @@
+
 from fastapi import FastAPI
 from math_service.core.api.routes import router as math_router
 
