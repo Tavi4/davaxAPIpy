@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from math_service.app.api.routes import router as math_router
+from math_service.core.api.routes import router as math_router
 
 app = FastAPI(
     title="Math Microservice",

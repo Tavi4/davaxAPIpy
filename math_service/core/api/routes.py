@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Query
-from math_service.app.models.schemas import PowerRequest, PowerResponse
-from math_service.app.services.math import calculate_power
-from math_service.app.models.schemas import FactorialResponse
-from math_service.app.services.math import calculate_factorial
-from math_service.app.models.schemas import FibonacciResponse
-from math_service.app.services.math import calculate_fibonacci
+from math_service.core.models.schemas import PowerRequest, PowerResponse
+from math_service.core.services.math import calculate_power
+from math_service.core.models.schemas import FactorialResponse
+from math_service.core.services.math import calculate_factorial
+from math_service.core.models.schemas import FibonacciResponse
+from math_service.core.services.math import calculate_fibonacci
 
 
 router = APIRouter(
