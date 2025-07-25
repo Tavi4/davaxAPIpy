@@ -16,6 +16,7 @@ def init_db():
     """Initialize the database with a logs table."""
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS operation_log (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
