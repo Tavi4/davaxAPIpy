@@ -26,16 +26,31 @@ def log_operation(operation: str, input_data: dict, result):
 
 
 #  function to fetch logs
-def get_operation_logs(limit: int = 10):
+from math_service.core.db.connection import get_connection
+
+def get_operation_logs(limit: int = 10, operation: str = None):
+    """
+    Fetch recent operation logs from the database.
+    Supports optional filtering by operation name.
+    """
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        SELECT operation, input_data, result, timestamp
-        FROM operation_log
-        ORDER BY timestamp DESC
-        LIMIT ?
-    """, (limit,))
+    if operation:
+        cursor.execute("""
+            SELECT operation, input_data, result, timestamp
+            FROM operation_log
+            WHERE operation = ?
+            ORDER BY timestamp DESC
+            LIMIT ?
+        """, (operation, limit))
+    else:
+        cursor.execute("""
+            SELECT operation, input_data, result, timestamp
+            FROM operation_log
+            ORDER BY timestamp DESC
+            LIMIT ?
+        """, (limit,))
 
     rows = cursor.fetchall()
     conn.close()
