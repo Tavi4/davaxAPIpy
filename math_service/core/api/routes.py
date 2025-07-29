@@ -22,14 +22,14 @@ def pow_operation(base: float = Query(...), exponent: float = Query(...)):
     return PowerResponse(base=base, exponent=exponent, result=result)
 
 @router.get("/factorial", response_model=FactorialResponse)
-def factorial_operation(n: int = Query(..., ge=0)):
+def factorial_operation(n: int = Query(..., ge=0, le=500)): # n is required bcs of ... and n must be a integer >= bcs of ge=0
 
     result = calculate_factorial(n)
     log_operation("factorial", {"n": n}, result)
     return FactorialResponse(number=n, result=result)
 
 @router.get("/fibonacci", response_model=FibonacciResponse)
-def fibonacci_operation(n: int = Query(..., ge=0)):
+def fibonacci_operation(n: int = Query(..., ge=0, le=1000)): #maximum input value = 1000
 
     result = calculate_fibonacci(n)
     log_operation("fibonacci", {"n": n}, result)
