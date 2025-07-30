@@ -1,5 +1,6 @@
 import json
 
+
 def format_log_entry(entry: dict) -> str:
     try:
         operation = entry.get("operation")

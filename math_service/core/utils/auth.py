@@ -1,7 +1,8 @@
-from fastapi import Header, HTTPException, Security, status
+from fastapi import Header, HTTPException, status
 
-API_KEY = "secret"  
+API_KEY = "secret"
 API_KEY_NAME = "X-API-Key"
+
 
 def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key != API_KEY:
