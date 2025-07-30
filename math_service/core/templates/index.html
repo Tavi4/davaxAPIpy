@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Microservice</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <h1>🚀 Math Microservice</h1>
+
+    <div class="main-layout">
+        <!-- LEFT COLUMN: Inputs and operations -->
+        <div class="left-column">
+            <div class="operation">
+                <h2>🔑 Enter your API key</h2>
+                <input type="text" id="apiKeyInput" placeholder="e.g. secret123" />
+            </div>
+
+            <div class="operation">
+                <h2>Power</h2>
+                <label>Base: <input type="number" id="powBase" /></label><br>
+                <label>Exponent: <input type="number" id="powExp" /></label><br>
+                <button onclick="callPow()">Calculate</button>
+                <div id="powResult" class="result"></div>
+            </div>
+
+            <div class="operation">
+                <h2>Factorial</h2>
+                <label>n: <input type="number" id="factN" /></label><br>
+                <button onclick="callFactorial()">Calculate</button>
+                <div id="factResult" class="result"></div>
+            </div>
+
+            <div class="operation">
+                <h2>Fibonacci</h2>
+                <h3>The calculus starts from 0</h3>
+                <label>n: <input type="number" id="fibN" /></label><br>
+                <button onclick="callFibonacci()">Calculate</button>
+                <div id="fibResult" class="result"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Logs -->
+        <div class="right-column">
+            <div class="operation">
+                <h2>📋 Recent Operation Logs</h2>
+                <button onclick="loadLogs()">🔁 Refresh Logs</button>
+                <ul id="logsList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
