@@ -17,6 +17,9 @@ def init_db():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Drop table if it exists
+    cursor.execute("DROP TABLE IF EXISTS operation_log")
+
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS operation_log (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
