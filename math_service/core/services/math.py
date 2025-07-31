@@ -1,6 +1,7 @@
 def calculate_power(base: float, exponent: float) -> float:
     return base ** exponent
 
+
 def calculate_factorial(n: int) -> int:
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers.")
@@ -10,6 +11,7 @@ def calculate_factorial(n: int) -> int:
     for i in range(2, n + 1):
         result *= i
     return result
+
 
 def calculate_fibonacci(n: int) -> int:
     if n < 0:

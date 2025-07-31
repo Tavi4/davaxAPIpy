@@ -30,9 +30,6 @@ def log_operation(operation: str, input_data: dict, result):
         print(f"[DB ERROR] Failed to log operation: {e}")
 
 
-#  function to fetch logs
-from math_service.core.db.connection import get_connection
-
 def get_operation_logs(limit: int = 10, operation: str = None):
     """
     Fetch recent operation logs from the database.
