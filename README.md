@@ -1,4 +1,4 @@
-# 🧠 Math Microservice
+#  Math Microservice
 
 A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling and test coverage.
 
