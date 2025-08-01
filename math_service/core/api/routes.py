@@ -16,6 +16,8 @@ router = APIRouter(
     tags=["Math Operations"]
 )
 
+routerAPI = APIRouter()
+routerAPI.include_router(router)
 
 @router.get("/pow", response_model=PowerResponse)
 def pow_operation(base: float = Query(...), exponent: float = Query(...)):
