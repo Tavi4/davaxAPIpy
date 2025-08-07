@@ -1,24 +1,24 @@
-#  Math Microservice
+# Math Microservice
 
-A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling and test coverage.
-
----
-
-##  Features
-
--  Endpoints for `power`, `factorial`, and `fibonacci` operations
--  SQLite database logging of all API calls
--  API key authentication (`X-API-Key: secret`)
--  Swagger UI at `/docs`
--  Custom error handling (422, 500)
--  Frontend UI via `index.html` + JavaScript
--  Configurable input limits
--  Unit-tested with `pytest`
--  Docker-ready
+A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling, Docker support, and full test coverage.
 
 ---
 
-##  Installation
+## Features
+
+- Endpoints for `power`, `factorial`, and `fibonacci` operations
+- SQLite database logging of all API calls
+- API key authentication (`X-API-Key: secret`)
+- Swagger UI at `/docs`
+- Custom error handling (422, 500)
+- Frontend UI via `index.html` + JavaScript
+- Configurable input limits
+- Unit-tested with `pytest`
+- Docker-ready
+
+---
+
+## Installation
 
 ### 1. Clone the Repository
 
@@ -32,7 +32,7 @@ cd math-microservice
 ```bash
 python -m venv .venv
 source .venv/bin/activate      # On Unix/macOS
-.venv\Scripts\activate       # On Windows
+.venv\Scripts\activate         # On Windows
 ```
 
 ### 3. Install Dependencies
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 ---
 
-##  Running the Server
+## Running the Server
 
 ```bash
 uvicorn math_service.core.main:app --reload
@@ -55,9 +55,10 @@ Server will be available at:
 Swagger UI:  
 [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
+
 ---
 
-##  Authentication
+## Authentication
 
 All endpoints (except `/logs` and `/`) require an API key.
 
@@ -75,20 +76,22 @@ curl -X GET "http://127.0.0.1:8000/factorial?n=5" -H "X-API-Key: secret"
 
 ---
 
-##  Running Tests
+## Running Tests
 
 ```bash
 pytest
 ```
 
 Test coverage includes:
+
 - Valid and invalid input cases
 - Security checks
 - Edge case logic
+- `/logs` filtering behavior
 
 ---
 
-##  Docker Support
+## Docker Support
 
 **Build:**
 
@@ -96,15 +99,15 @@ Test coverage includes:
 docker build -t math-microservice .
 ```
 
-**Run:**
+**Run (with volume mount for SQLite DB):**
 
 ```bash
-docker run -p 8000:8000 math-microservice
+docker run -p 8000:8000 -v "${PWD}:/app" math-microservice
 ```
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```
 math_service/
@@ -114,20 +117,44 @@ math_service/
 │   ├── db/                      # Database init + logging
 │   ├── models/schemas.py        # Pydantic models
 │   ├── services/math.py         # Business logic
-│   ├── utils/formatter.py       # Log formatter
+│   ├── utils/                   # Formatter, auth, etc.
 │   ├── templates/index.html     # Frontend UI
 │   └── static/                  # JS & CSS
 ```
 
 ---
 
-##  Authors
+## Developer Responsibilities
 
-Developed by **Octavian Cojocariu** and **Iulius Ambros**  
-For educational and learning purposes.
+### Octavian Cojocariu
+
+- Implemented all core mathematical endpoints: `/pow`, `/factorial`, `/fibonacci`
+- Integrated input validation using `Query(..., ge=0, le=...)` for numeric limits
+- Added global error handling for status codes `422` and `500`
+- Wrote unit tests for:
+  - `test_pow()`
+  - `test_factorial()`
+  - `test_fibonacci()`
+- Introduced LRU-based caching for performance on repeated computations
+
+### Iulius Ambros
+
+- Designed and implemented the database layer using SQLite:
+  - Connection management (`connection.py`)
+  - DB initialization with schema check (`init_db()`)
+  - Operation logging (`log_operation`)
+  - Log retrieval with filtering (`get_operation_logs`)
+- Implemented the `/logs` endpoint, including limit and filtering support
+- Wrote comprehensive test cases for:
+  - Invalid input and edge cases (e.g., negative values, `pow(0, 0)`)
+  - Log retrieval (e.g., empty results, filtered queries)
+- Set up and configured `pytest` test suite
+- Cleaned and validated codebase using `flake8`, and added `.flake8` config
+- Built and ran Docker container for the project using Rancher Desktop
+- Handled volume mounting to preserve the SQLite database across container runs
 
 ---
 
-##  License
+## License
 
 This project is open-source and intended for learning. Feel free to fork and modify.
