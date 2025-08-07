@@ -4,7 +4,7 @@ from math_service.core.main import app
 client = TestClient(app)
 
 
-#  /math/logs - LOGGING ENDPOINT TESTS
+#  /math/logs
 
 
 def test_logs_endpoint():
@@ -22,7 +22,6 @@ def test_logs_limit():
 
 
 def test_logs_filter_by_operation():
-    # Assumes at least one 'factorial' operation has been logged
     response = client.get("/logs?operation=factorial&limit=5")
     assert response.status_code == 200
     logs = response.json()["logs"]
