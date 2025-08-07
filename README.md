@@ -136,6 +136,7 @@ math_service/
   - `test_factorial()`
   - `test_fibonacci()`
 - Introduced LRU-based caching for performance on repeated computations
+- Implemented data models through Pydantic library
 
 ### Iulius Ambros
 
