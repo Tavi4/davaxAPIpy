@@ -42,13 +42,28 @@ dist/
 # Pydantic cache
 __pydantic_cache__/
 
-# Optional: pytest cache
+# pytest cache
 .pytest_cache/
 
-# Optional: Jupyter Notebooks
+# Jupyter Notebooks
 .ipynb_checkpoints/
 
-# Optional: local config overrides
+# local config overrides
 config.local.*
 
-#modificare Iulius
+# Docker artifacts
+*.tar
+*.img
+*.container
+
+# Build C extensions
+*.pyd
+*.so
+
+# Editor backups/swap
+*.swp
+*.swo
+*~
+
+# Extended env configs
+.env.*

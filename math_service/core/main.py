@@ -8,6 +8,7 @@ from math_service.core.db.connection import init_db
 # Initialize the database connection
 init_db()
 
+
 app = FastAPI(
     title="Math Microservice",
     description="Performs power, factorial, and fibonacci operations",

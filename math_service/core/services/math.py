@@ -1,7 +1,12 @@
+from functools import lru_cache
+
+
+@lru_cache(maxsize=128)
 def calculate_power(base: float, exponent: float) -> float:
     return base ** exponent
 
 
+@lru_cache(maxsize=128)
 def calculate_factorial(n: int) -> int:
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers.")
@@ -13,6 +18,7 @@ def calculate_factorial(n: int) -> int:
     return result
 
 
+@lru_cache(maxsize=128)
 def calculate_fibonacci(n: int) -> int:
     if n < 0:
         raise ValueError("Fibonacci is not defined for negative numbers.")

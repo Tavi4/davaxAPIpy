@@ -9,7 +9,7 @@ function getApiKey() {
 
 async function loadLogs() {
     const res = await fetch("/logs?limit=10");
-    const data = await res.json();  // ✅ <-- THIS was likely missing
+    const data = await res.json();
 
     console.log("Fetched logs:", data);
 
