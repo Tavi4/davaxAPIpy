@@ -1,4 +1,4 @@
-# Math Microservice
+ # Math Microservice
 
 A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling, Docker support, and full test coverage.
 
@@ -58,28 +58,22 @@ Swagger UI:
 
 ---
 
-## Authentication
+##  Authentication
 
 All endpoints (except `/logs` and `/`) require an API key.
 
-**Use this header in your requests:**
+###  Dynamic Key on Startup
 
-```http
-X-API-Key: secret
-```
+A **new API key is generated every time the server starts** and is printed to the console:
 
-**Example with `curl`:**
 
-```bash
-curl -X GET "http://127.0.0.1:8000/factorial?n=5" -H "X-API-Key: secret"
-```
+You must include this key in every request using the `X-API-Key` header.
 
----
-
-## Running Tests
+### Example Request with `curl`
 
 ```bash
-pytest
+curl -X GET "http://127.0.0.1:8000/factorial?n=5" -H "X-API-Key: <your-console-key>"
+
 ```
 
 Test coverage includes:
