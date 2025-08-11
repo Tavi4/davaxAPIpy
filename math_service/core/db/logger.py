@@ -1,6 +1,6 @@
-# core/db/logger.py
 
 from math_service.core.db.connection import get_connection
+from math_service.core.utils.publisher import publish_message
 
 import json
 import sqlite3
@@ -28,6 +28,8 @@ def log_operation(operation: str, input_data: dict, result):
 
     except sqlite3.Error as e:
         print(f"[DB ERROR] Failed to log operation: {e}")
+
+    publish_message(operation, input_data, result) # sending the message to rabbitmq
 
 
 def get_operation_logs(limit: int = 10, operation: str = None):
