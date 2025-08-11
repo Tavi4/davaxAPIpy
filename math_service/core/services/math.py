@@ -3,6 +3,8 @@ from functools import lru_cache
 
 @lru_cache(maxsize=128)
 def calculate_power(base: float, exponent: float) -> float:
+    if base == 0 and exponent < 0:
+        raise ValueError("0 cannot be raised to a negative power.")
     return base ** exponent
 
 

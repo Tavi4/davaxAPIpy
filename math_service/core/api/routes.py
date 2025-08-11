@@ -18,7 +18,11 @@ router = APIRouter(
 
 
 @router.get("/pow", response_model=PowerResponse, dependencies=[Depends(verify_api_key)])
-def pow_operation(base: float = Query(...), exponent: float = Query(...)):
+def pow_operation(
+    base: float = Query(..., ge=-1e6, le=1e6),
+    exponent: float = Query(..., ge=-1e4, le=1e4)
+    #upper limits for possible overflow
+):
     result = calculate_power(base, exponent)
     log_operation("power", {"base": base, "exponent": exponent}, result)
     return PowerResponse(base=base, exponent=exponent, result=result)

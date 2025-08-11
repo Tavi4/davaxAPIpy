@@ -9,15 +9,12 @@ def get_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row  # allows dict-like access to results
     return conn
-
+# edge case daca esuaza conexiunea trb facuta exceptie
 
 def init_db():
     """Initialize the database with a logs table."""
     conn = get_connection()
     cursor = conn.cursor()
-
-    # Drop table if it exists
-    cursor.execute("DROP TABLE IF EXISTS operation_log")
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS operation_log (
