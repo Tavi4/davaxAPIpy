@@ -1,24 +1,24 @@
-#  Math Microservice
+# Math Microservice
 
-A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling and test coverage.
-
----
-
-##  Features
-
--  Endpoints for `power`, `factorial`, and `fibonacci` operations
--  SQLite database logging of all API calls
--  API key authentication (`X-API-Key: secret`)
--  Swagger UI at `/docs`
--  Custom error handling (422, 500)
--  Frontend UI via `index.html` + JavaScript
--  Configurable input limits
--  Unit-tested with `pytest`
--  Docker-ready
+A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations, logs all requests into a SQLite database, and sends those operations to a RabbitMQ stream via CloudAMQP for further processing or async consumption.
 
 ---
 
-##  Installation
+## Features
+
+- Endpoints for `power`, `factorial`, and `fibonacci` operations
+- SQLite database logging of all API calls
+- RabbitMQ/CloudAMQP message publishing + consumer on dev side
+- Swagger UI at `/docs`
+- Custom error handling (422, 500)
+- Frontend UI via `index.html` + JavaScript
+- Configurable input limits
+- Unit-tested with `pytest`
+- Docker-ready
+
+---
+
+## Installation
 
 ### 1. Clone the Repository
 
@@ -43,52 +43,81 @@ pip install -r requirements.txt
 
 ---
 
-##  Running the Server
+## Running the Server
 
 ```bash
 uvicorn math_service.core.main:app --reload
 ```
 
 Server will be available at:  
-[http://127.0.0.1:8000](http://127.0.0.1:8000)
+http://127.0.0.1:8000
 
 Swagger UI:  
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+http://127.0.0.1:8000/docs
 
 ---
 
-##  Authentication
+## RabbitMQ Integration 
 
-All endpoints (except `/logs` and `/`) require an API key.
+Each successfully handled API request is also published to a RabbitMQ message queue named `math_logs`.
 
-**Use this header in your requests:**
+This allows external consumers (e.g., `consumer.py`) to asynchronously receive and process operation logs.
 
-```http
-X-API-Key: secret
+### Setup:
+
+- Hosted via CloudAMQP (free plan)
+- AMQP URL is stored securely in `.env` as `CLOUDAMQP_URL`
+- Uses `pika` for message publishing
+- Queue is declared as durable and messages are JSON-formatted
+
+### Example Published Message:
+
+```json
+{
+  "operation": "factorial",
+  "input": { "n": 5 },
+  "result": 120
+}
 ```
 
-**Example with `curl`:**
+To consume messages, run:
 
 ```bash
-curl -X GET "http://127.0.0.1:8000/factorial?n=5" -H "X-API-Key: secret"
+python math_service/core/consumer.py
 ```
 
 ---
 
-##  Running Tests
+## Authentication
+
+This project currently uses a temporary session-based API key generated at runtime.
+
+### Key Details:
+
+- A random API key is generated at app startup
+- It's displayed in the dev console (e.g., Session API Key: FKsuGRIfhJVKBSF9Yrv1nw)
+- This key must be provided in requests using the `X-API-Key` header
+- The frontend UI has a field where the user must paste this key
+
+Note: This system is not production-ready and exists only for development/testing. In future versions, it can be replaced with JWT-based authentication after login support is added.
+
+---
+
+## Running Tests
 
 ```bash
-pytest
+pytest tests\test_routes.py
 ```
 
 Test coverage includes:
 - Valid and invalid input cases
 - Security checks
 - Edge case logic
+- API parameter validation
 
 ---
 
-##  Docker Support
+## Docker Support
 
 **Build:**
 
@@ -104,7 +133,7 @@ docker run -p 8000:8000 math-microservice
 
 ---
 
-##  Project Structure
+## Project Structure
 
 ```
 math_service/
@@ -114,20 +143,22 @@ math_service/
 │   ├── db/                      # Database init + logging
 │   ├── models/schemas.py        # Pydantic models
 │   ├── services/math.py         # Business logic
-│   ├── utils/formatter.py       # Log formatter
+│   ├── utils/
+│   │   ├── formatter.py         # Log formatter
+│   │   ├── publisher.py         # RabbitMQ publisher (CloudAMQP)
 │   ├── templates/index.html     # Frontend UI
 │   └── static/                  # JS & CSS
 ```
 
 ---
 
-##  Authors
+## Authors
 
-Developed by **Octavian Cojocariu** and **Iulius Ambros**  
+Developed by Octavian Cojocariu and Iulius Ambros  
 For educational and learning purposes.
 
 ---
 
-##  License
+## License
 
 This project is open-source and intended for learning. Feel free to fork and modify.
