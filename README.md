@@ -1,6 +1,6 @@
- # Math Microservice
+# Math Microservice
 
-A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations and logs all requests into a SQLite database. It's secured with API key authentication and includes custom error handling, Docker support, and full test coverage.
+A learning project and proof-of-concept microservice, designed for easy extension and experimentation. This FastAPI-based service performs common math operations, logs all requests into a SQLite database, and sends those operations to a RabbitMQ stream via CloudAMQP for further processing or async consumption.
 
 ---
 
@@ -8,7 +8,7 @@ A learning project and proof-of-concept microservice, designed for easy extensio
 
 - Endpoints for `power`, `factorial`, and `fibonacci` operations
 - SQLite database logging of all API calls
-- API key authentication (`X-API-Key: secret`)
+- RabbitMQ/CloudAMQP message publishing + consumer on dev side
 - Swagger UI at `/docs`
 - Custom error handling (422, 500)
 - Frontend UI via `index.html` + JavaScript
@@ -32,7 +32,7 @@ cd math-microservice
 ```bash
 python -m venv .venv
 source .venv/bin/activate      # On Unix/macOS
-.venv\Scripts\activate         # On Windows
+.venv\Scripts\activate       # On Windows
 ```
 
 ### 3. Install Dependencies
@@ -50,38 +50,70 @@ uvicorn math_service.core.main:app --reload
 ```
 
 Server will be available at:  
-[http://127.0.0.1:8000](http://127.0.0.1:8000)
+http://127.0.0.1:8000
 
 Swagger UI:  
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-
+http://127.0.0.1:8000/docs
 
 ---
 
-##  Authentication
+## RabbitMQ Integration 
 
-All endpoints (except `/logs` and `/`) require an API key.
+Each successfully handled API request is also published to a RabbitMQ message queue named `math_logs`.
 
-###  Dynamic Key on Startup
+This allows external consumers (e.g., `consumer.py`) to asynchronously receive and process operation logs.
 
-A **new API key is generated every time the server starts** and is printed to the console:
+### Setup:
 
+- Hosted via CloudAMQP (free plan)
+- AMQP URL is stored securely in `.env` as `CLOUDAMQP_URL`
+- Uses `pika` for message publishing
+- Queue is declared as durable and messages are JSON-formatted
 
-You must include this key in every request using the `X-API-Key` header.
+### Example Published Message:
 
-### Example Request with `curl`
+```json
+{
+  "operation": "factorial",
+  "input": { "n": 5 },
+  "result": 120
+}
+```
+
+To consume messages, run:
 
 ```bash
-curl -X GET "http://127.0.0.1:8000/factorial?n=5" -H "X-API-Key: <your-console-key>"
+python math_service/core/consumer.py
+```
 
+---
+
+## Authentication
+
+This project currently uses a temporary session-based API key generated at runtime.
+
+### Key Details:
+
+- A random API key is generated at app startup
+- It's displayed in the dev console (e.g., Session API Key: FKsuGRIfhJVKBSF9Yrv1nw)
+- This key must be provided in requests using the `X-API-Key` header
+- The frontend UI has a field where the user must paste this key
+
+Note: This system is not production-ready and exists only for development/testing. In future versions, it can be replaced with JWT-based authentication after login support is added.
+
+---
+
+## Running Tests
+
+```bash
+pytest tests\test_routes.py
 ```
 
 Test coverage includes:
-
 - Valid and invalid input cases
 - Security checks
 - Edge case logic
-- `/logs` filtering behavior
+- API parameter validation
 
 ---
 
@@ -93,10 +125,10 @@ Test coverage includes:
 docker build -t math-microservice .
 ```
 
-**Run (with volume mount for SQLite DB):**
+**Run:**
 
 ```bash
-docker run -p 8000:8000 -v "${PWD}:/app" math-microservice
+docker run -p 8000:8000 math-microservice
 ```
 
 ---
@@ -111,42 +143,19 @@ math_service/
 │   ├── db/                      # Database init + logging
 │   ├── models/schemas.py        # Pydantic models
 │   ├── services/math.py         # Business logic
-│   ├── utils/                   # Formatter, auth, etc.
+│   ├── utils/
+│   │   ├── formatter.py         # Log formatter
+│   │   ├── publisher.py         # RabbitMQ publisher (CloudAMQP)
 │   ├── templates/index.html     # Frontend UI
 │   └── static/                  # JS & CSS
 ```
 
 ---
 
-## Developer Responsibilities
+## Authors
 
-### Octavian Cojocariu
-
-- Implemented all core mathematical endpoints: `/pow`, `/factorial`, `/fibonacci`
-- Integrated input validation using `Query(..., ge=0, le=...)` for numeric limits
-- Added global error handling for status codes `422` and `500`
-- Wrote unit tests for:
-  - `test_pow()`
-  - `test_factorial()`
-  - `test_fibonacci()`
-- Introduced LRU-based caching for performance on repeated computations
-- Implemented data models through Pydantic library
-
-### Iulius Ambros
-
-- Designed and implemented the database layer using SQLite:
-  - Connection management (`connection.py`)
-  - DB initialization with schema check (`init_db()`)
-  - Operation logging (`log_operation`)
-  - Log retrieval with filtering (`get_operation_logs`)
-- Implemented the `/logs` endpoint, including limit and filtering support
-- Wrote comprehensive test cases for:
-  - Invalid input and edge cases (e.g., negative values, `pow(0, 0)`)
-  - Log retrieval (e.g., empty results, filtered queries)
-- Set up and configured `pytest` test suite
-- Cleaned and validated codebase using `flake8`, and added `.flake8` config
-- Built and ran Docker container for the project using Rancher Desktop
-- Handled volume mounting to preserve the SQLite database across container runs
+Developed by Octavian Cojocariu and Iulius Ambros  
+For educational and learning purposes.
 
 ---
 
