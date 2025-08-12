@@ -17,6 +17,7 @@ connection = pika.BlockingConnection(params)
 channel = connection.channel()
 channel.queue_declare(queue='math_logs', durable=True)
 
+
 def publish_message(operation: str, input_data: dict, result):
     message = {
         "operation": operation,
@@ -28,5 +29,5 @@ def publish_message(operation: str, input_data: dict, result):
         exchange='',
         routing_key='math_logs',
         body=json.dumps(message),
-        properties=pika.BasicProperties(delivery_mode=2)# persistant
+        properties=pika.BasicProperties(delivery_mode=2)  # persistent
     )
