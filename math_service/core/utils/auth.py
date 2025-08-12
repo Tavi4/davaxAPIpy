@@ -1,3 +1,4 @@
+# Proof of concept, authentification not fully implemented
 from fastapi import Header, HTTPException, status
 import secrets
 

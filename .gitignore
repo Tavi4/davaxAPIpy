@@ -65,5 +65,3 @@ config.local.*
 *.swo
 *~
 
-# Extended env configs
-.env.*

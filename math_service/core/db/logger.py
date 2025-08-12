@@ -5,7 +5,7 @@ from math_service.core.utils.publisher import publish_message
 import json
 import sqlite3
 
-# EDGE CASE DACA FAILUIESTE CONEXIUNEA
+
 def log_operation(operation: str, input_data: dict, result):
     try:
         conn = get_connection()
@@ -26,11 +26,10 @@ def log_operation(operation: str, input_data: dict, result):
         conn.commit()
         conn.close()
 
+        publish_message(operation, input_data, result)
+
     except sqlite3.Error as e:
         print(f"[DB ERROR] Failed to log operation: {e}")
-
-    # trebuie sa dea publish doar daca a reusit sa logheze si in baza de date
-    publish_message(operation, input_data, result) # sending the message to rabbitmq
 
 
 def get_operation_logs(limit: int = 10, operation: str = None):
