@@ -21,7 +21,6 @@ router = APIRouter(
 def pow_operation(
     base: float = Query(..., ge=-1e6, le=1e6),
     exponent: float = Query(..., ge=-1e4, le=1e4)
-    #upper limits for possible overflow
 ):
     result = calculate_power(base, exponent)
     log_operation("power", {"base": base, "exponent": exponent}, result)
