@@ -122,13 +122,13 @@ Test coverage includes:
 **Build:**
 
 ```bash
-docker build -t math-microservice .
+nerdctl build -t davax-math-service .
 ```
 
 **Run:**
 
 ```bash
-docker run -p 8000:8000 math-microservice
+nerdctl run -it -p 8000:8000 -v ${PWD}:/app davax-math-service
 ```
 
 ---
