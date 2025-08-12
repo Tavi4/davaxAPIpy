@@ -151,13 +151,44 @@ math_service/
 ```
 
 ---
+## Developer Responsibilities
 
-## Authors
+### Octavian Cojocariu
 
-Developed by Octavian Cojocariu and Iulius Ambros  
-For educational and learning purposes.
+- Implemented all core mathematical endpoints: `/pow`, `/factorial`, `/fibonacci`
+- Integrated input validation using `Query(..., ge=0, le=...)` for numeric limits
+- Added global error handling for status codes `422` and `500`
+- Wrote unit tests for:
+  - `test_pow()`
+  - `test_factorial()`
+  - `test_fibonacci()`
+- Introduced LRU-based caching for performance on repeated computations
+- Implemented data models through Pydantic library
+- Developed session-based authentication system
+- Built frontend UI
+- Integrated RabbitMQ with `pika` for message publishing
+
+
+### Iulius Ambros
+
+- Designed and implemented the database layer using SQLite:
+  - Connection management (`connection.py`)
+  - DB initialization with schema check (`init_db()`)
+  - Operation logging (`log_operation`)
+  - Log retrieval with filtering (`get_operation_logs`)
+- Implemented the `/logs` endpoint, including limit and filtering support
+- Wrote comprehensive test cases for:
+  - Invalid input and edge cases (e.g., negative values, `pow(0, 0)`)
+  - Log retrieval (e.g., empty results, filtered queries)
+- Set up and configured `pytest` test suite
+- Cleaned and validated codebase using `flake8`, and added `.flake8` config
+- Built and ran Docker container for the project using Rancher Desktop
+- Handled volume mounting to preserve the SQLite database across container runs
 
 ---
+ 
+---
+
 
 ## License
 
