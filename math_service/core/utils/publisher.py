@@ -28,5 +28,5 @@ def publish_message(operation: str, input_data: dict, result):
         exchange='',
         routing_key='math_logs',
         body=json.dumps(message),
-        properties=pika.BasicProperties(delivery_mode=2)
+        properties=pika.BasicProperties(delivery_mode=2)# persistant
     )

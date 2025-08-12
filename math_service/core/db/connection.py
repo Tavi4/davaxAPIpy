@@ -6,10 +6,13 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "operations.db")
 
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row  # allows dict-like access to results
-    return conn
-# edge case daca esuaza conexiunea trb facuta exceptie
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.row_factory = sqlite3.Row  # allows dict-like access to results
+        return conn
+    except sqlite3.Error as e:
+        raise ValueError(f" Failed to connect to database at '{DB_PATH}': {str(e)}")
+
 
 def init_db():
     """Initialize the database with a logs table."""
